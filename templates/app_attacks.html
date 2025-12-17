@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Application Attacks</h2>
+
+{% if logs %}
+    {% set latest = logs[0] %}
+    <div class="alert" style="
+        background: {% if latest.status == 'Blocked' %}#2d2323{% else %}#2d2a23{% endif %};
+        color: {% if latest.status == 'Blocked' %}#ff5555{% else %}#ffb86c{% endif %};
+        padding: 16px; border-radius: 8px; margin-bottom: 20px; font-weight: bold;">
+        <span style="font-size: 1.1em;">
+            {% if latest.status == 'Blocked' %}
+                🚫 Application attack blocked!
+            {% else %}
+                ⚠️ Application attack alert!
+            {% endif %}
+        </span><br>
+        <strong>Type:</strong> {{ latest.type }}<br>
+        <strong>Endpoint:</strong> {{ latest.endpoint }}<br>
+        <strong>Status:</strong>
+        {% if latest.status == 'Blocked' %}
+            <span style="color: #ff5555;">Blocked</span>
+        {% else %}
+            <span style="color: #ffb86c;">Alert</span>
+        {% endif %}<br>
+        <strong>Time:</strong> {{ latest.time }}<br>
+        <strong>Details:</strong>
+        {% if latest.type == 'SQLi' %}
+            SQL Injection attempt detected and blocked.
+        {% elif latest.type == 'XSS' %}
+            Cross-site scripting (XSS) attempt detected.
+        {% elif latest.type == 'CSRF' %}
+            Cross-site request forgery (CSRF) attempt detected.
+        {% else %}
+            Application-level threat detected.
+        {% endif %}
+        <br>
+        The system has {% if latest.status == 'Blocked' %}blocked{% else %}flagged{% endif %} a {{ latest.type }} attack targeting <strong>{{ latest.endpoint }}</strong> at <strong>{{ latest.time }}</strong>.
+    </div>
+{% else %}
+    <div class="alert alert-success" style="background: #23263a; color: #50fa7b; padding: 16px; border-radius: 8px; margin-bottom: 20px; font-weight: bold;">
+        ✅ No application attacks detected recently.
+    </div>
+{% endif %}
+
+<table style="width: 95%; border-collapse: collapse; background: #23263a; box-shadow: 0 2px 8px #0006;">
+    <thead>
+        <tr style="background: #26293c; color: #ffb86c;">
+            <th>Type</th>
+            <th>Endpoint</th>
+            <th>Status</th>
+            <th>Time</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for log in logs %}
+            <tr style="border-bottom: 1px solid #35395a;">
+                <td>
+                    {% if log.type == 'SQLi' %}
+                        <span style="color: #ff5555; font-weight: bold;">SQLi</span>
+                    {% elif log.type == 'XSS' %}
+                        <span style="color: #f1fa8c; font-weight: bold;">XSS</span>
+                    {% elif log.type == 'CSRF' %}
+                        <span style="color: #8be9fd; font-weight: bold;">CSRF</span>
+                    {% else %}
+                        <span style="color: #b6c2ff;">{{ log.type }}</span>
+                    {% endif %}
+                </td>
+                <td>{{ log.endpoint }}</td>
+                <td>
+                    {% if log.status == 'Blocked' %}
+                        <span style="color: #ff5555; font-weight: bold;">Blocked</span>
+                    {% else %}
+                        <span style="color: #ffb86c;">Alert</span>
+                    {% endif %}
+                </td>
+                <td>{{ log.time }}</td>
+                <td>
+                    {% if log.type == 'SQLi' %}
+                        SQL Injection attempt detected and blocked.
+                    {% elif log.type == 'XSS' %}
+                        Cross-site scripting attempt detected.
+                    {% elif log.type == 'CSRF' %}
+                        Cross-site request forgery attempt detected.
+                    {% else %}
+                        Application-level threat detected.
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div style="margin-top: 32px; background: #202334; padding: 18px 28px; border-radius: 8px; color: #b6c2ff;">
+    <strong>About Application Attacks</strong><br>
+    Application attacks target vulnerabilities in your web app, such as SQL injection (SQLi), cross-site scripting (XSS), or CSRF. Your IPS detects and blocks these threats to keep your data and users safe. <br>
+    <ul style="margin-top: 8px;">
+        <li><b>SQLi</b>: Attempts to manipulate your database via malicious queries.</li>
+        <li><b>XSS</b>: Attempts to inject malicious scripts into web pages.</li>
+        <li><b>CSRF</b>: Attempts to trick users into performing unwanted actions.</li>
+    </ul>
+</div>
+{% endblock %}
+

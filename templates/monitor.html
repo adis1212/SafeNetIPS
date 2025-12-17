@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Attack Monitoring</h2>
+<canvas id="attackChart" width="600" height="300"></canvas>
+<script>
+    window.attackData = {{ attack_data | tojson }};
+    const data = {{ attack_data | tojson }};
+    const ctx = document.getElementById('attackChart').getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: data.labels,
+            datasets: [{
+                label: 'Attack Count',
+                data: data.counts,
+                backgroundColor: 'rgba(255, 99, 132, 0.4)'
+            }]
+        }
+    });
+</script>
+{% endblock %}

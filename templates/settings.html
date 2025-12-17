@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Settings</h2>
+<form method="post">
+    <label>Detection Thresholds:</label>
+    <input type="number" name="threshold" value="10"><br>
+    <label>Email Alerts:</label>
+    <input type="checkbox" name="alerts" checked><br>
+    <button type="submit">Save</button>
+</form>
+{% endblock %}

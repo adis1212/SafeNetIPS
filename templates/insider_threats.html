@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Insider Threats</h2>
+
+{% if logs %}
+    {% set latest = logs[0] %}
+    <div class="alert" style="
+        background: {% if latest.status == 'Blocked' %}#2d2323{% elif latest.status == 'Alert' %}#2d2a23{% else %}#23263a{% endif %};
+        color: {% if latest.status == 'Blocked' %}#ff5555{% elif latest.status == 'Alert' %}#ffb86c{% else %}#50fa7b{% endif %};
+        padding: 16px; border-radius: 8px; margin-bottom: 20px; font-weight: bold;">
+        <span style="font-size: 1.1em;">
+            {% if latest.status == 'Blocked' %}
+                🚫 Insider threat blocked!
+            {% elif latest.status == 'Alert' %}
+                ⚠️ Insider threat alert!
+            {% else %}
+                ✅ No unauthorized insider activity.
+            {% endif %}
+        </span><br>
+        <span>
+            <strong>User:</strong> {{ latest.user }}<br>
+            <strong>Action:</strong> {{ latest.action }}<br>
+            <strong>Status:</strong>
+            {% if latest.status == 'Blocked' %}
+                <span style="color: #ff5555;">Blocked</span>
+            {% elif latest.status == 'Alert' %}
+                <span style="color: #ffb86c;">Alert</span>
+            {% else %}
+                <span style="color: #50fa7b;">Allowed</span>
+            {% endif %}<br>
+            <strong>Time:</strong> {{ latest.time }}<br>
+            <strong>Access:</strong>
+            {% if latest.status == 'Blocked' %}
+                User was <span style="color:#ff5555;">not allowed</span> to access the data.
+            {% elif latest.status == 'Allowed' %}
+                User was <span style="color:#50fa7b;">allowed</span> to access the data.
+            {% else %}
+                User access is under review.
+            {% endif %}
+        </span>
+        <br>
+        <span>
+            The system has {% if latest.status == 'Blocked' %}blocked{% elif latest.status == 'Alert' %}flagged{% else %}reviewed{% endif %} this activity by <strong>{{ latest.user }}</strong> at <strong>{{ latest.time }}</strong>: <em>{{ latest.action }}</em>.
+        </span>
+    </div>
+{% else %}
+    <div class="alert alert-success" style="background: #23263a; color: #50fa7b; padding: 16px; border-radius: 8px; margin-bottom: 20px; font-weight: bold;">
+        ✅ No insider threats detected recently.
+    </div>
+{% endif %}
+<table>
+    <thead>
+        <tr>
+            <th>User</th>
+            <th>Action</th>
+            <th>Status</th>
+            <th>Time</th>
+            <th>Access</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for log in logs %}
+            <tr>
+                <td>{{ log.user }}</td>
+                <td>{{ log.action }}</td>
+                <td>
+                    {% if log.status == 'Alert' %}
+                        <span style="color: #ffb86c; font-weight: bold;">Alert</span>
+                    {% elif log.status == 'Blocked' %}
+                        <span style="color: #ff5555; font-weight: bold;">Blocked</span>
+                    {% else %}
+                        <span style="color: #50fa7b;">Allowed</span>
+                    {% endif %}
+                </td>
+                <td>{{ log.time }}</td>
+                <td>
+                    {% if log.status == 'Blocked' %}
+                        <span style="color:#ff5555;">Not Allowed</span>
+                    {% elif log.status == 'Allowed' %}
+                        <span style="color:#50fa7b;">Allowed</span>
+                    {% else %}
+                        Under Review
+                    {% endif %}
+                </td>
+                <td>
+                    {% if 'confidential' in log.action.lower() or 'exported' in log.action.lower() %}
+                        Sensitive data access or exfiltration detected.
+                    {% elif 'unauthorized' in log.action.lower() %}
+                        Unauthorized access attempt.
+                    {% else %}
+                        Unusual or suspicious activity.
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+<div style="margin-top: 32px; background: #202334; padding: 18px 28px; border-radius: 8px; color: #b6c2ff;">
+    <strong>What is an Insider Threat?</strong><br>
+    An insider threat is a security risk that comes from people within your organization—such as employees, contractors, or partners—who might misuse their access to sensitive data or systems, either intentionally or by accident. Monitoring and blocking such activities is crucial for protecting your organization from data leaks, sabotage, or fraud.
+</div>
+{% endblock %}

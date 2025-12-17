@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Brute Force Detection</h2>
+
+{% if logs %}
+    {% set latest = logs[0] %}
+    <div class="alert alert-danger" style="background: #2d2323; color: #ff5555; padding: 16px; border-radius: 8px; margin-bottom: 20px; font-weight: bold;">
+        <span style="font-size: 1.1em;">⚠️ Brute force attack detected!</span><br>
+        <span>
+            <strong>Username:</strong> {{ latest.username }}<br>
+            <strong>IP Address:</strong> {{ latest.ip }}<br>
+            <strong>Number of Attempts:</strong> {{ latest.attempts }}<br>
+            <strong>Status:</strong> {{ latest.status }}<br>
+            <strong>Time:</strong> {{ latest.time }}<br>
+        </span>
+        <br>
+        <span>
+            The system has detected multiple failed login attempts, indicating someone is trying to hack the password for <strong>{{ latest.username }}</strong> from IP <strong>{{ latest.ip }}</strong>. This activity has been <strong>{{ latest.status|lower }}</strong> by the Intrusion Prevention System.
+        </span>
+    </div>
+{% else %}
+    <div class="alert alert-success" style="background: #23263a; color: #50fa7b; padding: 16px; border-radius: 8px; margin-bottom: 20px; font-weight: bold;">
+        ✅ No brute force attempts detected recently.
+    </div>
+{% endif %}
+
+<table style="width: 95%; border-collapse: collapse; background: #23263a; box-shadow: 0 2px 8px #0006;">
+    <thead>
+        <tr style="background: #26293c; color: #ffb86c;">
+            <th>Username</th>
+            <th>IP Address</th>
+            <th>Attempts</th>
+            <th>Status</th>
+            <th>Time</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for log in logs %}
+            <tr style="border-bottom: 1px solid #35395a;">
+                <td>{{ log.username }}</td>
+                <td>{{ log.ip }}</td>
+                <td style="color: {% if log.attempts > 5 %}#ff5555{% else %}#f1fa8c{% endif %}; font-weight: bold;">{{ log.attempts }}</td>
+                <td>
+                    {% if log.status == 'Blocked' %}
+                        <span style="color: #ff5555; font-weight: bold;">Blocked</span>
+                    {% else %}
+                        <span style="color: #50fa7b;">Allowed</span>
+                    {% endif %}
+                </td>
+                <td>{{ log.time }}</td>
+                <td>
+                    {% if log.attempts > 5 %}
+                        Multiple failed logins detected. Possible brute force attempt.
+                    {% else %}
+                        Unusual login activity.
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div style="margin-top: 32px; background: #202334; padding: 18px 28px; border-radius: 8px; color: #b6c2ff;">
+    <strong>What is a Brute Force Attack?</strong><br>
+    A brute force attack is when someone tries to guess a password by systematically attempting many combinations. Your IPS monitors and blocks such suspicious activity to protect your system from unauthorized access.
+</div>
+{% endblock %}

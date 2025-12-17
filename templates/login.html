@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - IPS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="login-box">
+        <h2>Login</h2>
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+        <form method="post">
+            <input type="text" name="username" placeholder="Username" required><br>
+            <input type="email" name="username" placeholder="Your Email" required><br>
+            <input type="password" name="password" placeholder="Password" required><br>
+            <label><input type="checkbox" name="remember"> Remember me</label><br>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+</body>
+</html>

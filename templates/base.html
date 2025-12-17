@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>IPS Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+<script src="{{ url_for('static', filename='main.js') }}"></script>
+
+</head>
+<body>
+    <nav>
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('monitor') }}">Monitoring</a>
+        <a href="{{ url_for('email_security') }}">Email Security</a>
+        <a href="{{ url_for('brute_force') }}">Brute Force</a>
+        <a href="{{ url_for('insider_threats') }}">Insider Threats</a>
+        <a href="{{ url_for('app_attacks') }}">App Attacks</a>
+        <a href="{{ url_for('malware') }}">Malware</a>
+        <a href="{{ url_for('settings') }}">Settings</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </nav>
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

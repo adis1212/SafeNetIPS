@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>IPS Dashboard</h1>
+<p>Welcome to your Intrusion Prevention System dashboard.</p>
+<div>
+    <h3>Attack Summary</h3>
+    <ul>
+        {% for label, count in zipped %}
+            <li>{{ label }}: {{ count }}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div>
+    <h3>Recently Detected Threats</h3>
+    <ul>
+        {% for threat in detected_threats %}
+            <li>{{ threat }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

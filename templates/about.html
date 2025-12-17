@@ -1,0 +1,22 @@
+<!-- templates/about.html -->
+{% extends "base.html" %}
+{% block content %}
+<h2>About SafeNet IPS</h2>
+<p>
+  <strong>SafeNet.ai</strong> is an AI-powered Intrusion Prevention System (IPS) built using Flask.
+  It identifies and prevents a wide range of cyber threats in real-time, including:
+</p>
+
+<ul>
+  <li><strong>Network-Based Attacks:</strong> DoS, DDoS</li>
+  <li><strong>Application Attacks:</strong> SQL Injection, XSS, CSRF</li>
+  <li><strong>Malware Attacks:</strong> Spyware, Keyloggers</li>
+  <li><strong>Insider Threats:</strong> Unauthorized access, Data exfiltration</li>
+  <li><strong>Email Threats:</strong> Phishing, Spoofing</li>
+  <li><strong>Brute Force Attacks:</strong> Password cracking</li>
+</ul>
+
+<p>
+  This system uses a trained machine learning model and logs any malicious attempts for audit and monitoring.
+</p>
+{% endblock %}
